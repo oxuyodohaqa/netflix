@@ -65,11 +65,23 @@ def iter_combos(combo_path: Path):
 def count_combos(combo_path: Path) -> int:
     return sum(1 for _ in iter_combos(combo_path))
 
-
 def combo_source():
     if RESUME_FILE.exists():
         return RESUME_FILE, True
     return find_combo_path(), False
+
+
+def write_resume(combo_path: Path, processed_count: int):
+    with combo_path.open("r") as source, RESUME_FILE.open("w") as resume:
+        for index, line in enumerate(source, start=1):
+            if index > processed_count:
+                resume.write(line)
+
+
+def combo_source():
+    if RESUME_FILE.exists():
+        return RESUME_FILE, True
+    return COMBO_FILE, False
 
 
 def write_resume(combo_path: Path, processed_count: int):
